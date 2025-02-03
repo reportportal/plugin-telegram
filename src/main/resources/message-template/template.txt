@@ -1,0 +1,33 @@
+<b>LAUNCH FINISHED:</b>
+<a href="${LAUNCH_LINK}">${LAUNCH_NAME}#${LAUNCH_NUMBER}</a>
+
+<b>Start time:</b>
+${LAUNCH_START_TIME}
+
+<b>Finish time:</b>
+${LAUNCH_FINISH_TIME}
+
+<b>ID:</b>
+${LAUNCH_ID}
+
+<b>UUID:</b>
+${LAUNCH_UUID}
+
+<b>Description:</b>
+${LAUNCH_DESCRIPTION}
+
+<b>Attributes:</b>
+[${LAUNCH_ATTRIBUTES}]
+
+<b>Execution Statistics:</b>
+🔵 TOTAL: ${statistics$executions$total}
+🟢 PASSED: ${statistics$executions$passed}
+🔴 FAILED: ${statistics$executions$failed}
+⚪ SKIPPED: ${statistics$executions$skipped}
+
+<b>Defect Statistics:</b>
+🟥 PRODUCT BUG GROUP: ${statistics$defects$product_bug$total}
+🟨 AUTOMATION BUG GROUP: ${statistics$defects$automation_bug$total}
+🟦 SYSTEM ISSUE GROUP: ${statistics$defects$system_issue$total}
+⬜ NO DEFECT GROUP: ${statistics$defects$no_defect$total}
+⬛ TO INVESTIGATE GROUP: ${statistics$defects$to_investigate$total}
