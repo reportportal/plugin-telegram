@@ -54,7 +54,6 @@ public class AttachmentResolver {
     String template;
     try {
       template = Files.readString(file.toPath());
-      System.out.println("Template: " + template);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

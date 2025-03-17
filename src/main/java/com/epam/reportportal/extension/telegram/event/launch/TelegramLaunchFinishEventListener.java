@@ -47,8 +47,6 @@ public class TelegramLaunchFinishEventListener implements
   public final static String TELEGRAM_NOTIFICATION_ATTRIBUTE = "notifications.telegram.enabled";
 
   private static final String apiKey = "7890482468:AAEEmWWpEyleIFVKn1P4-ocz9lth4qFDef8";
-
-  public final static String BOT_API_KEY = "botApi";
   public final static String CHAT_ID = "chatId";
 
   public final static String PLUGIN_NOTIFICATION_TYPE = "telegram";
@@ -131,10 +129,6 @@ public class TelegramLaunchFinishEventListener implements
 
     HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-    System.out.println("Request entity: " + requestEntity);
-    System.out.println("Request msg: " + msg);
-
-
     ResponseEntity<String> response = restTemplate.postForEntity(baseUrl, requestEntity, String.class);
 
     if (!response.getStatusCode().is2xxSuccessful()) {
@@ -147,11 +141,6 @@ public class TelegramLaunchFinishEventListener implements
   private Optional<String> getChatId(SenderCase senderCase) {
     return Optional.ofNullable(
         (String) senderCase.getRuleDetails().getOptions().get(CHAT_ID));
-  }
-
-  private Optional<String> getBotApi(SenderCase senderCase) {
-    return Optional.ofNullable(
-        (String) senderCase.getRuleDetails().getOptions().get(BOT_API_KEY));
   }
 
   private Optional<String> resolveAttachment(Launch launch, String launchLink) {

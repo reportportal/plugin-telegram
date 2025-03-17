@@ -22,7 +22,6 @@ import com.epam.reportportal.extension.ReportPortalExtensionPoint;
 import com.epam.reportportal.extension.common.IntegrationTypeProperties;
 import com.epam.reportportal.extension.event.LaunchFinishedPluginEvent;
 import com.epam.reportportal.extension.event.PluginEvent;
-import com.epam.reportportal.extension.telegram.binary.JsonObjectLoader;
 import com.epam.reportportal.extension.telegram.binary.MessageTemplateStore;
 import com.epam.reportportal.extension.telegram.event.launch.TelegramLaunchFinishEventListener;
 import com.epam.reportportal.extension.telegram.event.launch.resolver.AttachmentResolver;
@@ -80,10 +79,6 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
 
   public static final String SCRIPTS_DIR = "scripts";
 
-  private final ObjectMapper objectMapper;
-
-  private final JsonObjectLoader jsonObjectLoader;
-
   private final Supplier<Map<String, PluginCommand>> pluginCommandMapping = new MemoizingSupplier<>(
       this::getCommands);
 
@@ -130,10 +125,6 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
     resourcesDir = IntegrationTypeProperties.RESOURCES_DIRECTORY.getValue(initParams)
         .map(String::valueOf).orElse("");
 
-    objectMapper = configureObjectMapper();
-
-    jsonObjectLoader = new JsonObjectLoader(objectMapper);
-
     messageTemplateStoreSupplier = new MemoizingSupplier<>(
         () -> new MessageTemplateStore(resourcesDir));
 
@@ -161,7 +152,6 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
   }
 
   private void initListeners() {
-    System.out.println("initListeners");
     ApplicationEventMulticaster applicationEventMulticaster = applicationContext.getBean(
         AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME,
         ApplicationEventMulticaster.class
