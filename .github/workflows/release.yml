@@ -27,9 +27,6 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
       - name: Setup git credentials
         uses: oleksiyrudenko/gha-git-credentials@v2
         with:
