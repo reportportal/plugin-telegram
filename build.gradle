@@ -1,5 +1,5 @@
 plugins {
-    id "io.spring.dependency-management" version "1.1.4"
+    id "io.spring.dependency-management" version "1.1.7"
     id 'java'
     id 'jacoco'
     id "com.github.node-gradle.node" version "2.2.1"
@@ -38,7 +38,7 @@ dependencyManagement {
     }
 }
 
-ext['junit-jupiter.version'] = "${junitVersion}"
+ext['spring-boot.version'] = "${springBootVersion}"
 
 dependencies {
     if (releaseMode) {
@@ -46,39 +46,14 @@ dependencies {
         implementation 'com.epam.reportportal:plugin-api'
         annotationProcessor 'com.epam.reportportal:plugin-api'
     } else {
-        implementation 'com.github.reportportal:commons-dao:a98c172'
-        implementation 'com.github.reportportal:plugin-api:develop-SNAPSHOT'
-        annotationProcessor 'com.github.reportportal:plugin-api:develop-SNAPSHOT'
+        implementation 'com.github.reportportal:commons-dao:196d4ac'
+        implementation 'com.github.reportportal:plugin-api:8874441'
+        annotationProcessor 'com.github.reportportal:plugin-api:8874441'
     }
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
-    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2'
-    implementation 'org.hibernate:hibernate-core:5.6.15.Final'
-    testImplementation 'org.mockito:mockito-core:5.14.2'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
-    testImplementation "org.junit.jupiter:junit-jupiter"
-    testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testImplementation "org.junit.jupiter:junit-jupiter-engine"
-    testImplementation 'net.bytebuddy:byte-buddy:1.14.9'
 }
-
-test {
-    useJUnitPlatform()
-    maxParallelForks = 1
-    testLogging {
-        events = ['failed']
-        exceptionFormat = 'short'
-    }
-    reports {
-        junitXml.required = true
-    }
-}
-
-build.dependsOn jacocoTestReport
 
 artifacts {
     archives shadowJar
