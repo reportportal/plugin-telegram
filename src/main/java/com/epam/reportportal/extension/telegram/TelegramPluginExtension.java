@@ -56,11 +56,13 @@ import javax.sql.DataSource;
 import org.pf4j.Extension;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.web.client.RestTemplate;
 
@@ -121,6 +123,10 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
   @Autowired
   private DataSource dataSource;
 
+  @Qualifier("eventListenerExecutor")
+  @Autowired
+  private TaskExecutor taskExecutor;
+
   public TelegramPluginExtension(Map<String, Object> initParams) {
     resourcesDir = IntegrationTypeProperties.RESOURCES_DIRECTORY.getValue(initParams)
         .map(String::valueOf).orElse("");
@@ -142,7 +148,7 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
 
     launchFinishEventListenerSupplier = new MemoizingSupplier<>(
         () -> new TelegramLaunchFinishEventListener(projectRepository,
-            launchRepository, senderCaseMatcher.get(), attachmentResolverSupplier.get(), restTemplate));
+            launchRepository, senderCaseMatcher.get(), attachmentResolverSupplier.get(), restTemplate, taskExecutor));
   }
 
   @PostConstruct

@@ -31,7 +31,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.BooleanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -43,6 +46,8 @@ import org.springframework.web.client.RestTemplate;
  */
 public class TelegramLaunchFinishEventListener implements
     ApplicationListener<LaunchFinishedPluginEvent> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(TelegramLaunchFinishEventListener.class);
 
   public final static String TELEGRAM_NOTIFICATION_ATTRIBUTE = "notifications.telegram.enabled";
 
@@ -60,25 +65,34 @@ public class TelegramLaunchFinishEventListener implements
   private final AttachmentResolver attachmentResolver;
   private final RestTemplate restTemplate;
 
+  private final TaskExecutor taskExecutor;
+
 
   public TelegramLaunchFinishEventListener(
       ProjectRepository projectRepository, LaunchRepository launchRepository,
       SenderCaseMatcher senderCaseMatcher, AttachmentResolver attachmentResolver,
-      RestTemplate restTemplate) {
+      RestTemplate restTemplate, TaskExecutor taskExecutor) {
     this.projectRepository = projectRepository;
     this.launchRepository = launchRepository;
     this.senderCaseMatcher = senderCaseMatcher;
     this.attachmentResolver = attachmentResolver;
     this.restTemplate = restTemplate;
+    this.taskExecutor = taskExecutor;
   }
 
   @Override
   public void onApplicationEvent(LaunchFinishedPluginEvent event) {
-    Project project = getProject(event.getProjectId());
-    if (isNotificationsEnabled(project)) {
-      Launch launch = getLaunch(event.getSource());
-      processSenderCases(project, launch, event.getLaunchLink());
-    }
+    taskExecutor.execute(() -> {
+      try {
+        Project project = getProject(event.getProjectId());
+        if (isNotificationsEnabled(project)) {
+          Launch launch = getLaunch(event.getSource());
+          processSenderCases(project, launch, event.getLaunchLink());
+        }
+      } catch (Exception e) {
+        LOGGER.error("Failed to process Telegram notification for launch");
+      }
+    });
   }
 
   private Project getProject(Long projectId) {
