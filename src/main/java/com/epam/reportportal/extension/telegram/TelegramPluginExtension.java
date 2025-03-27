@@ -123,10 +123,6 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
   @Autowired
   private DataSource dataSource;
 
-  @Qualifier("eventListenerExecutor")
-  @Autowired
-  private TaskExecutor taskExecutor;
-
   public TelegramPluginExtension(Map<String, Object> initParams) {
     resourcesDir = IntegrationTypeProperties.RESOURCES_DIRECTORY.getValue(initParams)
         .map(String::valueOf).orElse("");
@@ -148,7 +144,7 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
 
     launchFinishEventListenerSupplier = new MemoizingSupplier<>(
         () -> new TelegramLaunchFinishEventListener(projectRepository,
-            launchRepository, senderCaseMatcher.get(), attachmentResolverSupplier.get(), restTemplate, taskExecutor));
+            launchRepository, senderCaseMatcher.get(), attachmentResolverSupplier.get(), restTemplate));
   }
 
   @PostConstruct
