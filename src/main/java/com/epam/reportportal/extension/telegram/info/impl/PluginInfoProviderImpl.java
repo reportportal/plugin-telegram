@@ -94,11 +94,16 @@ public class PluginInfoProviderImpl implements PluginInfoProvider {
 
   private void addFieldsInfo(IntegrationType integrationType) {
     Map<String, Object> details = integrationType.getDetails().getDetails();
-    Map<String, Object> ruleField = new HashMap<>();
-    ruleField.put("name", "chatId");
-    ruleField.put("label", "Chat id");
-    ruleField.put("type", "text");
-		ruleField.put("required", true);
-    details.put(FIELDS_KEY, List.of(ruleField));
+    Map<String, Object> chatField = new HashMap<>();
+    chatField.put("name", "chatId");
+    chatField.put("label", "Chat id");
+    chatField.put("type", "text");
+    chatField.put("required", true);
+    Map<String, Object> apiKeyField = new HashMap<>();
+    apiKeyField.put("name", "apiKey");
+    apiKeyField.put("label", "Bot Api Key");
+    apiKeyField.put("type", "text");
+    apiKeyField.put("required", true);
+    details.put(FIELDS_KEY, List.of(chatField, apiKeyField));
   }
 }

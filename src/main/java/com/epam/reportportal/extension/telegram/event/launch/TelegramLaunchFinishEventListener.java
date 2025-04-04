@@ -45,9 +45,9 @@ public class TelegramLaunchFinishEventListener implements
     ApplicationListener<LaunchFinishedPluginEvent> {
 
   public final static String TELEGRAM_NOTIFICATION_ATTRIBUTE = "notifications.telegram.enabled";
-
-  private static final String apiKey = "7890482468:AAEEmWWpEyleIFVKn1P4-ocz9lth4qFDef8";
   public final static String CHAT_ID = "chatId";
+
+  public final static String API_KEY = "apiKey";
 
   public final static String PLUGIN_NOTIFICATION_TYPE = "telegram";
 
@@ -110,9 +110,10 @@ public class TelegramLaunchFinishEventListener implements
 
   private void sendNotification(SenderCase senderCase, Launch launch, String launchLink) {
     Optional<String> chatId = getChatId(senderCase);
+    Optional<String> apiKey = getApiKey(senderCase);
     Optional<String> attachment = resolveAttachment(launch, launchLink);
-    if (chatId.isPresent() && attachment.isPresent()) {
-      sendMessage(apiKey, Long.parseLong(chatId.get()), attachment.get());
+    if (chatId.isPresent() && apiKey.isPresent() && attachment.isPresent()) {
+      sendMessage(apiKey.get(), Long.parseLong(chatId.get()), attachment.get());
     }
   }
 
@@ -141,6 +142,11 @@ public class TelegramLaunchFinishEventListener implements
   private Optional<String> getChatId(SenderCase senderCase) {
     return Optional.ofNullable(
         (String) senderCase.getRuleDetails().getOptions().get(CHAT_ID));
+  }
+
+  private Optional<String> getApiKey(SenderCase senderCase) {
+    return Optional.ofNullable(
+        (String) senderCase.getRuleDetails().getOptions().get(API_KEY));
   }
 
   private Optional<String> resolveAttachment(Launch launch, String launchLink) {
