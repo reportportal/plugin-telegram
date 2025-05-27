@@ -81,6 +81,10 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
 
   public static final String SCRIPTS_DIR = "scripts";
 
+  private static final String NAME_FIELD = "name";
+
+  private static final String PLUGIN_NAME = "Telegram";
+
   private final Supplier<Map<String, PluginCommand>> pluginCommandMapping = new MemoizingSupplier<>(
       this::getCommands);
 
@@ -189,6 +193,7 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
   @Override
   public Map<String, ?> getPluginParams() {
     Map<String, Object> params = new HashMap<>();
+    params.put(NAME_FIELD, PLUGIN_NAME);
     params.put(ALLOWED_COMMANDS, new ArrayList<>(pluginCommandMapping.get().keySet()));
     params.put(DOCUMENTATION_LINK_FIELD, DOCUMENTATION_LINK);
     params.put(COMMON_COMMANDS, new ArrayList<>(commonPluginCommandMapping.get().keySet()));
