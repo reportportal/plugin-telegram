@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.BooleanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -43,6 +45,8 @@ import org.springframework.web.client.RestTemplate;
  */
 public class TelegramLaunchFinishEventListener implements
     ApplicationListener<LaunchFinishedPluginEvent> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(TelegramLaunchFinishEventListener.class);
 
   public final static String TELEGRAM_NOTIFICATION_ATTRIBUTE = "notifications.telegram.enabled";
   public final static String CHAT_ID = "chatId";
@@ -74,10 +78,14 @@ public class TelegramLaunchFinishEventListener implements
 
   @Override
   public void onApplicationEvent(LaunchFinishedPluginEvent event) {
-    Project project = getProject(event.getProjectId());
-    if (isNotificationsEnabled(project)) {
-      Launch launch = getLaunch(event.getSource());
-      processSenderCases(project, launch, event.getLaunchLink());
+    try {
+      Project project = getProject(event.getProjectId());
+      if (isNotificationsEnabled(project)) {
+        Launch launch = getLaunch(event.getSource());
+        processSenderCases(project, launch, event.getLaunchLink());
+      }
+    } catch (Exception e) {
+      LOGGER.error("Failed to process Telegram notification for launch");
     }
   }
 
