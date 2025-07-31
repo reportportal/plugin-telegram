@@ -7,7 +7,6 @@ import com.epam.reportportal.extension.telegram.collector.PropertyCollector;
 import com.epam.reportportal.extension.telegram.model.enums.template.DefaultTemplateProperty;
 import com.epam.ta.reportportal.entity.ItemAttribute;
 import com.epam.ta.reportportal.entity.launch.Launch;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,7 +27,10 @@ public class AttributesCollector implements PropertyCollector<Launch, DefaultTem
   private Map<DefaultTemplateProperty, String> convertToProperties(Set<ItemAttribute> attributes) {
     final String attributesString = attributes.stream()
         .filter(a -> BooleanUtils.isFalse(a.isSystem()))
-        .map(a -> ofNullable(a.getKey()).orElse("") + ":" + a.getValue())
+        .map(a -> {
+          String key = a.getKey();
+          return key != null ? key + ":" + a.getValue() : a.getValue();
+        })
         .collect(Collectors.joining("; "));
     return Map.of(LAUNCH_ATTRIBUTES, attributesString);
   }
