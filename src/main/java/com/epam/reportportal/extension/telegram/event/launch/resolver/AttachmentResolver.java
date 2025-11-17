@@ -23,7 +23,7 @@ import com.epam.reportportal.extension.telegram.factory.PropertyCollectorFactory
 import com.epam.reportportal.extension.telegram.model.enums.SlackEventType;
 import com.epam.reportportal.extension.telegram.model.template.TemplateProperty;
 import com.epam.reportportal.extension.telegram.model.template.TextProperty;
-import com.epam.ta.reportportal.entity.launch.Launch;
+import com.epam.reportportal.infrastructure.persistence.entity.launch.Launch;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

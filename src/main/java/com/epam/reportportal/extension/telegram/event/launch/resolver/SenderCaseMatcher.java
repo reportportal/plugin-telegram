@@ -21,18 +21,18 @@ import static com.epam.reportportal.extension.telegram.model.enums.template.Stat
 import static com.epam.reportportal.extension.telegram.model.enums.template.StatisticTemplateProperty.STATISTIC_EXECUTION_TOTAL;
 
 import com.epam.reportportal.extension.telegram.utils.NotificationConfigConverter;
-import com.epam.ta.reportportal.dao.TestItemRepository;
-import com.epam.ta.reportportal.entity.enums.LogicalOperator;
-import com.epam.ta.reportportal.entity.enums.SendCase;
-import com.epam.ta.reportportal.entity.launch.Launch;
-import com.epam.ta.reportportal.entity.project.email.LaunchAttributeRule;
-import com.epam.ta.reportportal.entity.project.email.SenderCase;
-import com.epam.ta.reportportal.entity.statistics.Statistics;
-import com.epam.ta.reportportal.ws.reporting.ItemAttributeResource;
+import com.epam.reportportal.infrastructure.persistence.dao.TestItemRepository;
+import com.epam.reportportal.infrastructure.persistence.entity.enums.LogicalOperator;
+import com.epam.reportportal.infrastructure.persistence.entity.enums.SendCase;
+import com.epam.reportportal.infrastructure.persistence.entity.launch.Launch;
+import com.epam.reportportal.infrastructure.persistence.entity.project.email.LaunchAttributeRule;
+import com.epam.reportportal.infrastructure.persistence.entity.project.email.SenderCase;
+import com.epam.reportportal.infrastructure.persistence.entity.statistics.Statistics;
+import com.epam.reportportal.reporting.ItemAttributeResource;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * @author <a href="mailto:andrei_piankouski@epam.com">Andrei Piankouski</a>

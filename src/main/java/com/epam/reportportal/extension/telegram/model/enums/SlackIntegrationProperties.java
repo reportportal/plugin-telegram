@@ -2,7 +2,7 @@ package com.epam.reportportal.extension.telegram.model.enums;
 
 import static java.util.Optional.ofNullable;
 
-import com.epam.ta.reportportal.entity.integration.Integration;
+import com.epam.reportportal.infrastructure.persistence.entity.integration.Integration;
 import java.util.Optional;
 
 public enum SlackIntegrationProperties {

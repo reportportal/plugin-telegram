@@ -5,8 +5,7 @@ import com.epam.reportportal.extension.telegram.event.EventHandlerFactory;
 import com.epam.reportportal.extension.telegram.event.handler.EventHandler;
 import com.epam.reportportal.extension.telegram.event.handler.plugin.PluginLoadedEventHandler;
 import com.epam.reportportal.extension.telegram.info.PluginInfoProvider;
-import com.epam.ta.reportportal.dao.IntegrationTypeRepository;
-
+import com.epam.reportportal.infrastructure.persistence.dao.IntegrationTypeRepository;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class PluginEventHandlerFactory implements EventHandlerFactory<PluginEven
   private final Map<String, EventHandler<PluginEvent>> eventHandlerMapping;
 
   public PluginEventHandlerFactory(IntegrationTypeRepository integrationTypeRepository,
-       PluginInfoProvider pluginInfoProvider) {
+      PluginInfoProvider pluginInfoProvider) {
     this.eventHandlerMapping = new HashMap<>();
     this.eventHandlerMapping.put(LOAD_KEY,
         new PluginLoadedEventHandler(integrationTypeRepository, pluginInfoProvider)

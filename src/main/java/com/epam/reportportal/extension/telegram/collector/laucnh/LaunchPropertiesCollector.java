@@ -12,7 +12,7 @@ import static java.util.Optional.ofNullable;
 
 import com.epam.reportportal.extension.telegram.collector.PropertyCollector;
 import com.epam.reportportal.extension.telegram.model.enums.template.DefaultTemplateProperty;
-import com.epam.ta.reportportal.entity.launch.Launch;
+import com.epam.reportportal.infrastructure.persistence.entity.launch.Launch;
 import com.google.common.collect.ImmutableMap;
 import java.util.LinkedHashMap;
 import java.util.Map;

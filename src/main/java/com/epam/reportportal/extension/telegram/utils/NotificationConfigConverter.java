@@ -16,8 +16,8 @@
 
 package com.epam.reportportal.extension.telegram.utils;
 
-import com.epam.ta.reportportal.entity.project.email.LaunchAttributeRule;
-import com.epam.ta.reportportal.ws.reporting.ItemAttributeResource;
+import com.epam.reportportal.infrastructure.persistence.entity.project.email.LaunchAttributeRule;
+import com.epam.reportportal.reporting.ItemAttributeResource;
 import java.util.function.Function;
 
 /**
