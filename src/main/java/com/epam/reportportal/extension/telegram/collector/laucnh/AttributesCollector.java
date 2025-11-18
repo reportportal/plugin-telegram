@@ -5,12 +5,12 @@ import static java.util.Optional.ofNullable;
 
 import com.epam.reportportal.extension.telegram.collector.PropertyCollector;
 import com.epam.reportportal.extension.telegram.model.enums.template.DefaultTemplateProperty;
-import com.epam.ta.reportportal.entity.ItemAttribute;
-import com.epam.ta.reportportal.entity.launch.Launch;
+import com.epam.reportportal.infrastructure.persistence.entity.ItemAttribute;
+import com.epam.reportportal.infrastructure.persistence.entity.launch.Launch;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 
 public class AttributesCollector implements PropertyCollector<Launch, DefaultTemplateProperty> {

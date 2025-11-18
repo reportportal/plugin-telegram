@@ -1,10 +1,10 @@
 package com.epam.reportportal.extension.telegram.event.plugin;
 
+import static java.util.Optional.ofNullable;
+
 import com.epam.reportportal.extension.event.PluginEvent;
 import com.epam.reportportal.extension.telegram.event.EventHandlerFactory;
 import org.springframework.context.ApplicationListener;
-
-import static java.util.Optional.ofNullable;
 
 /**
  * @author Andrei Piankouski
@@ -22,8 +22,9 @@ public class PluginEventListener implements ApplicationListener<PluginEvent> {
   @Override
   public void onApplicationEvent(PluginEvent event) {
     if (supports(event)) {
-      ofNullable(pluginEventEventHandlerFactory.getEventHandler(event.getType())).ifPresent(pluginEventEventHandler -> pluginEventEventHandler
-          .handle(event));
+      ofNullable(pluginEventEventHandlerFactory.getEventHandler(event.getType())).ifPresent(
+          pluginEventEventHandler -> pluginEventEventHandler
+              .handle(event));
     }
   }
 

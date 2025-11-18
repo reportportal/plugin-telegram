@@ -32,23 +32,15 @@ repositories {
     }
 }
 
-dependencyManagement {
-    imports {
-        mavenBom(releaseMode ? 'com.epam.reportportal:commons-bom:' + getProperty('bom.version') : 'com.epam.reportportal:commons-bom:5.13.2')
-    }
-}
-
 ext['spring-boot.version'] = "${springBootVersion}"
 
 dependencies {
     if (releaseMode) {
-        implementation 'com.epam.reportportal:commons-dao'
-        implementation 'com.epam.reportportal:plugin-api'
-        annotationProcessor 'com.epam.reportportal:plugin-api'
+        implementation 'com.epam.reportportal:service-api'
+        annotationProcessor 'com.epam.reportportal:service-api'
     } else {
-        implementation 'com.github.reportportal:commons-dao:196d4ac'
-        implementation 'com.github.reportportal:plugin-api:9bd040f'
-        annotationProcessor 'com.github.reportportal:plugin-api:9bd040f'
+        implementation 'com.github.reportportal:service-api:3e34a90'
+        annotationProcessor 'com.github.reportportal:service-api:3e34a90'
     }
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"

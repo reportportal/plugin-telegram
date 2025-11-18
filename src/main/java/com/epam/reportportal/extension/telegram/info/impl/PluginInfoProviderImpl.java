@@ -3,10 +3,10 @@ package com.epam.reportportal.extension.telegram.info.impl;
 import static java.util.Optional.ofNullable;
 
 import com.epam.reportportal.extension.telegram.info.PluginInfoProvider;
-import com.epam.reportportal.rules.exception.ErrorType;
-import com.epam.reportportal.rules.exception.ReportPortalException;
-import com.epam.ta.reportportal.entity.enums.IntegrationGroupEnum;
-import com.epam.ta.reportportal.entity.integration.IntegrationType;
+import com.epam.reportportal.infrastructure.persistence.entity.enums.IntegrationGroupEnum;
+import com.epam.reportportal.infrastructure.persistence.entity.integration.IntegrationType;
+import com.epam.reportportal.infrastructure.rules.exception.ErrorType;
+import com.epam.reportportal.infrastructure.rules.exception.ReportPortalException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;

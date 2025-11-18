@@ -4,12 +4,12 @@ import static java.util.Optional.ofNullable;
 
 import com.epam.reportportal.extension.telegram.collector.PropertyCollector;
 import com.epam.reportportal.extension.telegram.model.enums.template.StatisticTemplateProperty;
-import com.epam.ta.reportportal.entity.launch.Launch;
+import com.epam.reportportal.infrastructure.persistence.entity.launch.Launch;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 public class StatisticsPropertiesCollector implements PropertyCollector<Launch, StatisticTemplateProperty> {
 
@@ -22,8 +22,10 @@ public class StatisticsPropertiesCollector implements PropertyCollector<Launch, 
 
     ofNullable(launch.getStatistics()).filter(CollectionUtils::isNotEmpty)
         .ifPresent(statistics -> statistics.stream()
-            .filter(s -> properties.containsKey(StatisticTemplateProperty.valueOfByName(s.getStatisticsField().getName())))
-            .forEach(s -> properties.put(StatisticTemplateProperty.valueOfByName(s.getStatisticsField().getName()), String.valueOf(s.getCounter()))));
+            .filter(
+                s -> properties.containsKey(StatisticTemplateProperty.valueOfByName(s.getStatisticsField().getName())))
+            .forEach(s -> properties.put(StatisticTemplateProperty.valueOfByName(s.getStatisticsField().getName()),
+                String.valueOf(s.getCounter()))));
 
     return properties;
   }
