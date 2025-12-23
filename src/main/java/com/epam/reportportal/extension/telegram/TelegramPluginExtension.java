@@ -21,7 +21,7 @@ import com.epam.reportportal.extension.PluginCommand;
 import com.epam.reportportal.extension.ReportPortalExtensionPoint;
 import com.epam.reportportal.extension.common.IntegrationTypeProperties;
 import com.epam.reportportal.core.events.domain.PluginUploadedEvent;
-import com.epam.reportportal.extension.event.LaunchFinishedPluginEvent;
+import com.epam.reportportal.extension.event.LaunchFinishedNotificationEvent;
 import com.epam.reportportal.extension.telegram.binary.MessageTemplateStore;
 import com.epam.reportportal.extension.telegram.event.launch.TelegramLaunchFinishEventListener;
 import com.epam.reportportal.extension.telegram.event.launch.resolver.AttachmentResolver;
@@ -91,7 +91,7 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
 
   private final Supplier<ApplicationListener<PluginUploadedEvent>> pluginLoadedListener;
 
-  private final Supplier<ApplicationListener<LaunchFinishedPluginEvent>> launchFinishEventListenerSupplier;
+  private final Supplier<ApplicationListener<LaunchFinishedNotificationEvent>> launchedFinishNotificationEventListenerSupplier;
 
   private final Supplier<MessageTemplateStore> messageTemplateStoreSupplier;
 
@@ -137,7 +137,7 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
     attachmentResolverSupplier = new MemoizingSupplier<>(() -> new AttachmentResolver(
         messageTemplateStoreSupplier.get(), new PropertyCollectorFactory()));
 
-    launchFinishEventListenerSupplier = new MemoizingSupplier<>(
+    launchedFinishNotificationEventListenerSupplier = new MemoizingSupplier<>(
         () -> new TelegramLaunchFinishEventListener(projectRepository,
             launchRepository, senderCaseMatcher.get(), attachmentResolverSupplier.get(), restTemplate));
   }
@@ -154,7 +154,8 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
         ApplicationEventMulticaster.class
     );
     applicationEventMulticaster.addApplicationListener(pluginLoadedListener.get());
-    applicationEventMulticaster.addApplicationListener(launchFinishEventListenerSupplier.get());
+    applicationEventMulticaster.addApplicationListener(
+        launchedFinishNotificationEventListenerSupplier.get());
   }
 
   private void initScripts() throws IOException {
@@ -178,7 +179,8 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
         ApplicationEventMulticaster.class
     );
     applicationEventMulticaster.removeApplicationListener(pluginLoadedListener.get());
-    applicationEventMulticaster.removeApplicationListener(launchFinishEventListenerSupplier.get());
+    applicationEventMulticaster.removeApplicationListener(
+        launchedFinishNotificationEventListenerSupplier.get());
   }
 
   @Override
