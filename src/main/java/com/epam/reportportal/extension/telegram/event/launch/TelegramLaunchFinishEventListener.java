@@ -43,11 +43,9 @@ import org.springframework.web.client.RestTemplate;
 /**
  * @author <a href="mailto:andrei_piankouski@epam.com">Andrei Piankouski</a>
  */
-public class TelegramLaunchFinishEventListener implements
-    ApplicationListener<LaunchFinishedNotificationEvent> {
+public class TelegramLaunchFinishEventListener implements ApplicationListener<LaunchFinishedNotificationEvent> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(
-      TelegramLaunchFinishEventListener.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(TelegramLaunchFinishEventListener.class);
 
   public final static String TELEGRAM_NOTIFICATION_ATTRIBUTE = "notifications.telegram.enabled";
   public final static String CHAT_ID = "chatId";
@@ -139,8 +137,7 @@ public class TelegramLaunchFinishEventListener implements
 
     HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-    ResponseEntity<String> response = restTemplate.postForEntity(baseUrl, requestEntity,
-        String.class);
+    ResponseEntity<String> response = restTemplate.postForEntity(baseUrl, requestEntity, String.class);
 
     if (!response.getStatusCode().is2xxSuccessful()) {
       System.err.println("Failed to send message: " + response.getBody());

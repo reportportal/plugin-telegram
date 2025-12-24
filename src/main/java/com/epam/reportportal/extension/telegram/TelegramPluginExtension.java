@@ -16,11 +16,11 @@
 
 package com.epam.reportportal.extension.telegram;
 
+import com.epam.reportportal.core.events.domain.PluginUploadedEvent;
 import com.epam.reportportal.extension.CommonPluginCommand;
 import com.epam.reportportal.extension.PluginCommand;
 import com.epam.reportportal.extension.ReportPortalExtensionPoint;
 import com.epam.reportportal.extension.common.IntegrationTypeProperties;
-import com.epam.reportportal.core.events.domain.PluginUploadedEvent;
 import com.epam.reportportal.extension.event.LaunchFinishedNotificationEvent;
 import com.epam.reportportal.extension.telegram.binary.MessageTemplateStore;
 import com.epam.reportportal.extension.telegram.event.launch.TelegramLaunchFinishEventListener;
@@ -154,8 +154,7 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
         ApplicationEventMulticaster.class
     );
     applicationEventMulticaster.addApplicationListener(pluginLoadedListener.get());
-    applicationEventMulticaster.addApplicationListener(
-        launchedFinishNotificationEventListenerSupplier.get());
+    applicationEventMulticaster.addApplicationListener(launchedFinishNotificationEventListenerSupplier.get());
   }
 
   private void initScripts() throws IOException {
@@ -179,8 +178,7 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
         ApplicationEventMulticaster.class
     );
     applicationEventMulticaster.removeApplicationListener(pluginLoadedListener.get());
-    applicationEventMulticaster.removeApplicationListener(
-        launchedFinishNotificationEventListenerSupplier.get());
+    applicationEventMulticaster.removeApplicationListener(launchedFinishNotificationEventListenerSupplier.get());
   }
 
   @Override
