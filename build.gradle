@@ -2,15 +2,17 @@ plugins {
     id "io.spring.dependency-management" version "1.1.7"
     id 'java'
     id 'jacoco'
-    id "com.github.node-gradle.node" version "2.2.1"
+    id 'com.gradleup.shadow' version '9.3.1'
+    id "com.github.node-gradle.node" version "7.1.0"
 }
 
 node {
     version = '20.11.0'
     npmVersion = '10.2.4'
     download = true
-    workDir = file("${project.buildDir}/ui")
-    nodeModulesDir = file("${project.rootDir}/ui")
+    workDir = layout.buildDirectory.dir('ui').get().asFile
+    npmWorkDir = layout.buildDirectory.dir('npm').get().asFile
+    nodeProjectDir = file("${project.rootDir}/ui")
 }
 
 npm_run_build {
@@ -26,9 +28,9 @@ apply from: scriptsUrl + '/signing.gradle'
 
 repositories {
     mavenLocal()
-    mavenCentral { url "https://repo1.maven.org/maven2" }
+    mavenCentral { url = "https://repo1.maven.org/maven2" }
     if (!releaseMode) {
-        maven { url 'https://jitpack.io' }
+        maven { url = 'https://jitpack.io' }
     }
 }
 
@@ -39,17 +41,17 @@ dependencies {
         implementation 'com.epam.reportportal:service-api'
         annotationProcessor 'com.epam.reportportal:service-api'
     } else {
-        implementation 'com.github.reportportal:service-api:4a137a7'
-        annotationProcessor 'com.github.reportportal:service-api:4a137a7'
+        implementation 'com.github.reportportal:service-api:7044a29'
+        annotationProcessor 'com.github.reportportal:service-api:7044a29'
     }
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-artifacts {
-    archives shadowJar
-}
+assemble.dependsOn shadowJar
 
 generatePomFileForShadowPublication { pom.packaging = "jar" }
 
@@ -89,7 +91,7 @@ shadowJar {
         into("/resources")
     }
     configurations = [project.configurations.compileClasspath]
-    zip64 true
+    zip64 = true
     dependencies {
         include(dependency('commons-io:commons-io:2.15.1'))
     }
