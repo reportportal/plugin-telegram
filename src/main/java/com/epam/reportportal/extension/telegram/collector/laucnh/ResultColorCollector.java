@@ -15,15 +15,15 @@
  */
 package com.epam.reportportal.extension.telegram.collector.laucnh;
 
-import static com.epam.reportportal.infrastructure.persistence.entity.enums.StatusEnum.FAILED;
-import static com.epam.reportportal.infrastructure.persistence.entity.enums.StatusEnum.INTERRUPTED;
-import static com.epam.reportportal.infrastructure.persistence.entity.enums.StatusEnum.PASSED;
+import static com.epam.reportportal.base.infrastructure.persistence.entity.enums.StatusEnum.FAILED;
+import static com.epam.reportportal.base.infrastructure.persistence.entity.enums.StatusEnum.INTERRUPTED;
+import static com.epam.reportportal.base.infrastructure.persistence.entity.enums.StatusEnum.PASSED;
 
 import com.epam.reportportal.extension.telegram.collector.PropertyCollector;
 import com.epam.reportportal.extension.telegram.model.enums.template.Color;
 import com.epam.reportportal.extension.telegram.model.template.TextProperty;
-import com.epam.reportportal.infrastructure.persistence.entity.enums.StatusEnum;
-import com.epam.reportportal.infrastructure.persistence.entity.launch.Launch;
+import com.epam.reportportal.base.infrastructure.persistence.entity.enums.StatusEnum;
+import com.epam.reportportal.base.infrastructure.persistence.entity.launch.Launch;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;

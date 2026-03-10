@@ -21,14 +21,14 @@ import static com.epam.reportportal.extension.telegram.model.enums.template.Stat
 import static com.epam.reportportal.extension.telegram.model.enums.template.StatisticTemplateProperty.STATISTIC_EXECUTION_TOTAL;
 
 import com.epam.reportportal.extension.telegram.utils.NotificationConfigConverter;
-import com.epam.reportportal.infrastructure.persistence.dao.TestItemRepository;
-import com.epam.reportportal.infrastructure.persistence.entity.enums.LogicalOperator;
-import com.epam.reportportal.infrastructure.persistence.entity.enums.SendCase;
-import com.epam.reportportal.infrastructure.persistence.entity.launch.Launch;
-import com.epam.reportportal.infrastructure.persistence.entity.project.email.LaunchAttributeRule;
-import com.epam.reportportal.infrastructure.persistence.entity.project.email.SenderCase;
-import com.epam.reportportal.infrastructure.persistence.entity.statistics.Statistics;
-import com.epam.reportportal.reporting.ItemAttributeResource;
+import com.epam.reportportal.base.infrastructure.persistence.dao.TestItemRepository;
+import com.epam.reportportal.base.infrastructure.persistence.entity.enums.LogicalOperator;
+import com.epam.reportportal.base.infrastructure.persistence.entity.enums.SendCase;
+import com.epam.reportportal.base.infrastructure.persistence.entity.launch.Launch;
+import com.epam.reportportal.base.infrastructure.persistence.entity.project.email.LaunchAttributeRule;
+import com.epam.reportportal.base.infrastructure.persistence.entity.project.email.SenderCase;
+import com.epam.reportportal.base.infrastructure.persistence.entity.statistics.Statistics;
+import com.epam.reportportal.base.reporting.ItemAttributeResource;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;

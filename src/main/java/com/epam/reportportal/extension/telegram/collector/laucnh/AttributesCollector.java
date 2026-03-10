@@ -5,8 +5,8 @@ import static java.util.Optional.ofNullable;
 
 import com.epam.reportportal.extension.telegram.collector.PropertyCollector;
 import com.epam.reportportal.extension.telegram.model.enums.template.DefaultTemplateProperty;
-import com.epam.reportportal.infrastructure.persistence.entity.ItemAttribute;
-import com.epam.reportportal.infrastructure.persistence.entity.launch.Launch;
+import com.epam.reportportal.base.infrastructure.persistence.entity.ItemAttribute;
+import com.epam.reportportal.base.infrastructure.persistence.entity.launch.Launch;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
