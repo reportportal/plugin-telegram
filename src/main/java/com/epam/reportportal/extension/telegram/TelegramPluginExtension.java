@@ -16,7 +16,7 @@
 
 package com.epam.reportportal.extension.telegram;
 
-import com.epam.reportportal.core.events.domain.PluginUploadedEvent;
+import com.epam.reportportal.base.core.events.domain.PluginUploadedEvent;
 import com.epam.reportportal.extension.CommonPluginCommand;
 import com.epam.reportportal.extension.PluginCommand;
 import com.epam.reportportal.extension.ReportPortalExtensionPoint;
@@ -30,10 +30,10 @@ import com.epam.reportportal.extension.telegram.event.plugin.PluginLoadedEventHa
 import com.epam.reportportal.extension.telegram.factory.PropertyCollectorFactory;
 import com.epam.reportportal.extension.telegram.info.impl.PluginInfoProviderImpl;
 import com.epam.reportportal.extension.telegram.utils.MemoizingSupplier;
-import com.epam.reportportal.infrastructure.persistence.dao.IntegrationTypeRepository;
-import com.epam.reportportal.infrastructure.persistence.dao.LaunchRepository;
-import com.epam.reportportal.infrastructure.persistence.dao.ProjectRepository;
-import com.epam.reportportal.infrastructure.persistence.dao.TestItemRepository;
+import com.epam.reportportal.base.infrastructure.persistence.dao.IntegrationTypeRepository;
+import com.epam.reportportal.base.infrastructure.persistence.dao.LaunchRepository;
+import com.epam.reportportal.base.infrastructure.persistence.dao.ProjectRepository;
+import com.epam.reportportal.base.infrastructure.persistence.dao.TestItemRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

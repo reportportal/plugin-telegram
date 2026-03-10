@@ -1,8 +1,8 @@
 package com.epam.reportportal.extension.telegram.event.plugin;
 
-import com.epam.reportportal.core.events.domain.PluginUploadedEvent;
+import com.epam.reportportal.base.core.events.domain.PluginUploadedEvent;
 import com.epam.reportportal.extension.telegram.info.PluginInfoProvider;
-import com.epam.reportportal.infrastructure.persistence.dao.IntegrationTypeRepository;
+import com.epam.reportportal.base.infrastructure.persistence.dao.IntegrationTypeRepository;
 import org.springframework.context.ApplicationListener;
 
 /**
