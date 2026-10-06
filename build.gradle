@@ -42,8 +42,8 @@ dependencies {
         implementation 'com.epam.reportportal:service-api'
         annotationProcessor 'com.epam.reportportal:service-api'
     } else {
-        implementation 'com.github.reportportal:service-api:e81b4f6'
-        annotationProcessor 'com.github.reportportal:service-api:e81b4f6'
+        implementation 'com.github.reportportal:service-api:37cb1a0'
+        annotationProcessor 'com.github.reportportal:service-api:37cb1a0'
     }
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"

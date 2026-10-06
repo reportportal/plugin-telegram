@@ -20,15 +20,15 @@ import static com.epam.reportportal.extension.telegram.model.enums.template.Stat
 import static com.epam.reportportal.extension.telegram.model.enums.template.StatisticTemplateProperty.STATISTIC_DEFECTS_TO_INVESTIGATE;
 import static com.epam.reportportal.extension.telegram.model.enums.template.StatisticTemplateProperty.STATISTIC_EXECUTION_TOTAL;
 
-import com.epam.reportportal.extension.telegram.utils.NotificationConfigConverter;
 import com.epam.reportportal.base.infrastructure.persistence.dao.TestItemRepository;
 import com.epam.reportportal.base.infrastructure.persistence.entity.enums.LogicalOperator;
 import com.epam.reportportal.base.infrastructure.persistence.entity.enums.SendCase;
 import com.epam.reportportal.base.infrastructure.persistence.entity.launch.Launch;
+import com.epam.reportportal.base.infrastructure.persistence.entity.launch.LaunchStatistics;
 import com.epam.reportportal.base.infrastructure.persistence.entity.project.email.LaunchAttributeRule;
 import com.epam.reportportal.base.infrastructure.persistence.entity.project.email.SenderCase;
-import com.epam.reportportal.base.infrastructure.persistence.entity.statistics.Statistics;
-import com.epam.reportportal.base.reporting.ItemAttributeResource;
+import com.epam.reportportal.base.reporting.AttributeResource;
+import com.epam.reportportal.extension.telegram.utils.NotificationConfigConverter;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -48,7 +48,8 @@ public class SenderCaseMatcher {
   public boolean isSenderCaseMatched(SenderCase senderCase, Launch launch) {
     return isSuccessRateEnough(launch, senderCase.getSendCase())
         && isLaunchNameMatched(launch, senderCase)
-        && isAttributesMatched(launch, senderCase.getLaunchAttributeRules(), senderCase.getAttributesOperator());
+        && isAttributesMatched(launch, senderCase.getLaunchAttributeRules(),
+        senderCase.getAttributesOperator());
   }
 
   private static boolean isLaunchNameMatched(Launch launch, SenderCase oneCase) {
@@ -95,11 +96,12 @@ public class SenderCaseMatcher {
     return total == 0 ? total : (ti + pb + si + ab) / total;
   }
 
-  public static Integer extractStatisticsCount(String statisticsField, Set<Statistics> statistics) {
+  public static Integer extractStatisticsCount(String statisticsField,
+      Set<LaunchStatistics> statistics) {
     return statistics.stream()
         .filter(it -> it.getStatisticsField().getName().equalsIgnoreCase(statisticsField))
         .findFirst()
-        .orElse(new Statistics())
+        .orElse(new LaunchStatistics())
         .getCounter();
   }
 
@@ -110,39 +112,39 @@ public class SenderCaseMatcher {
       return true;
     }
 
-    Set<ItemAttributeResource> itemAttributesResource =
+    Set<AttributeResource> attributesResource =
         launchAttributeRules.stream().map(NotificationConfigConverter.TO_ATTRIBUTE_RULE_RESOURCE)
             .collect(Collectors.toSet());
 
-    Set<ItemAttributeResource> itemAttributes =
+    Set<AttributeResource> attributes =
         launch.getAttributes().stream().filter(attribute -> !attribute.isSystem())
             .map(attribute -> {
-              ItemAttributeResource attributeResource = new ItemAttributeResource();
+              AttributeResource attributeResource = new AttributeResource();
               attributeResource.setKey(attribute.getKey());
               attributeResource.setValue(attribute.getValue());
               return attributeResource;
             }).collect(Collectors.toSet());
 
     if (LogicalOperator.AND.equals(logicalOperator)) {
-      return itemAttributesResource.stream().allMatch(resourceAttr -> itemAttributes.stream()
+      return attributesResource.stream().allMatch(resourceAttr -> attributes.stream()
           .anyMatch(attr -> areAttributesMatched(attr, resourceAttr)));
     }
 
-    return itemAttributes.stream().anyMatch(attr -> itemAttributesResource.stream()
+    return attributes.stream().anyMatch(attr -> attributesResource.stream()
         .anyMatch(resourceAttr -> areAttributesMatched(attr, resourceAttr)));
   }
 
-  private static boolean areAttributesMatched(ItemAttributeResource itemAttribute,
-      ItemAttributeResource itemAttributeResource) {
+  private static boolean areAttributesMatched(AttributeResource attribute,
+      AttributeResource attributeResource) {
     // Case 1: Key and Value are the same
     boolean isEqual =
-        Objects.equals(itemAttribute.getKey(), itemAttributeResource.getKey()) && Objects.equals(
-            itemAttribute.getValue(), itemAttributeResource.getValue());
+        Objects.equals(attribute.getKey(), attributeResource.getKey()) && Objects.equals(
+            attribute.getValue(), attributeResource.getValue());
 
-    // Case 2: Key is null in itemAttributesResource and the Value is the same
+    // Case 2: Key is null in attributesResource and the Value is the same
     boolean isValueEqualWithKeyNull =
-        itemAttributeResource.getKey() == null && Objects.equals(itemAttribute.getValue(),
-            itemAttributeResource.getValue()
+        attributeResource.getKey() == null && Objects.equals(attribute.getValue(),
+            attributeResource.getValue()
         );
 
     return isEqual || isValueEqualWithKeyNull;
