@@ -15,9 +15,6 @@
  */
 package com.epam.reportportal.extension.telegram.event.launch;
 
-import com.epam.reportportal.extension.event.LaunchFinishedNotificationEvent;
-import com.epam.reportportal.extension.telegram.event.launch.resolver.AttachmentResolver;
-import com.epam.reportportal.extension.telegram.event.launch.resolver.SenderCaseMatcher;
 import com.epam.reportportal.base.infrastructure.persistence.dao.LaunchRepository;
 import com.epam.reportportal.base.infrastructure.persistence.dao.ProjectRepository;
 import com.epam.reportportal.base.infrastructure.persistence.entity.enums.ProjectAttributeEnum;
@@ -27,6 +24,9 @@ import com.epam.reportportal.base.infrastructure.persistence.entity.project.Proj
 import com.epam.reportportal.base.infrastructure.persistence.entity.project.email.SenderCase;
 import com.epam.reportportal.base.infrastructure.rules.exception.ErrorType;
 import com.epam.reportportal.base.infrastructure.rules.exception.ReportPortalException;
+import com.epam.reportportal.extension.event.LaunchFinishedNotificationEvent;
+import com.epam.reportportal.extension.telegram.event.launch.resolver.AttachmentResolver;
+import com.epam.reportportal.extension.telegram.event.launch.resolver.SenderCaseMatcher;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -34,11 +34,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 /**
  * @author <a href="mailto:andrei_piankouski@epam.com">Andrei Piankouski</a>
@@ -61,18 +58,18 @@ public class TelegramLaunchFinishEventListener implements ApplicationListener<La
   private final SenderCaseMatcher senderCaseMatcher;
 
   private final AttachmentResolver attachmentResolver;
-  private final RestTemplate restTemplate;
+  private final RestClient restClient;
 
 
   public TelegramLaunchFinishEventListener(
       ProjectRepository projectRepository, LaunchRepository launchRepository,
       SenderCaseMatcher senderCaseMatcher, AttachmentResolver attachmentResolver,
-      RestTemplate restTemplate) {
+      RestClient restClient) {
     this.projectRepository = projectRepository;
     this.launchRepository = launchRepository;
     this.senderCaseMatcher = senderCaseMatcher;
     this.attachmentResolver = attachmentResolver;
-    this.restTemplate = restTemplate;
+    this.restClient = restClient;
   }
 
   @Override
@@ -127,23 +124,18 @@ public class TelegramLaunchFinishEventListener implements ApplicationListener<La
   public void sendMessage(String apiKey, Long chatId, String msg) {
     String baseUrl = "https://api.telegram.org/bot" + apiKey + "/sendMessage";
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-
     Map<String, Object> body = new HashMap<>();
     body.put("chat_id", chatId);
     body.put("text", msg);
     body.put("parse_mode", "HTML");
 
-    HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-
-    ResponseEntity<String> response = restTemplate.postForEntity(baseUrl, requestEntity, String.class);
-
-    if (!response.getStatusCode().is2xxSuccessful()) {
-      System.err.println("Failed to send message: " + response.getBody());
-    } else {
-      System.out.println("Message sent successfully: " + response.getBody());
-    }
+    restClient.post()
+        .uri(baseUrl)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(body)
+        .retrieve()
+        .toBodilessEntity();
+    LOGGER.debug("Telegram message sent to chat {}", chatId);
   }
 
   private Optional<String> getChatId(SenderCase senderCase) {

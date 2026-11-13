@@ -17,6 +17,10 @@
 package com.epam.reportportal.extension.telegram;
 
 import com.epam.reportportal.base.core.events.domain.PluginUploadedEvent;
+import com.epam.reportportal.base.infrastructure.persistence.dao.IntegrationTypeRepository;
+import com.epam.reportportal.base.infrastructure.persistence.dao.LaunchRepository;
+import com.epam.reportportal.base.infrastructure.persistence.dao.ProjectRepository;
+import com.epam.reportportal.base.infrastructure.persistence.dao.TestItemRepository;
 import com.epam.reportportal.extension.CommonPluginCommand;
 import com.epam.reportportal.extension.PluginCommand;
 import com.epam.reportportal.extension.ReportPortalExtensionPoint;
@@ -30,16 +34,6 @@ import com.epam.reportportal.extension.telegram.event.plugin.PluginLoadedEventHa
 import com.epam.reportportal.extension.telegram.factory.PropertyCollectorFactory;
 import com.epam.reportportal.extension.telegram.info.impl.PluginInfoProviderImpl;
 import com.epam.reportportal.extension.telegram.utils.MemoizingSupplier;
-import com.epam.reportportal.base.infrastructure.persistence.dao.IntegrationTypeRepository;
-import com.epam.reportportal.base.infrastructure.persistence.dao.LaunchRepository;
-import com.epam.reportportal.base.infrastructure.persistence.dao.ProjectRepository;
-import com.epam.reportportal.base.infrastructure.persistence.dao.TestItemRepository;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -60,7 +54,7 @@ import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 /**
  * @author Andrei Piankouski
@@ -81,17 +75,11 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
 
   private static final String PLUGIN_NAME = "Telegram";
 
-  private final Supplier<Map<String, PluginCommand>> pluginCommandMapping = new MemoizingSupplier<>(
-      this::getCommands);
-
-  private final Supplier<Map<String, CommonPluginCommand<?>>> commonPluginCommandMapping = new MemoizingSupplier<>(
-      this::getCommonCommands);
-
   private final String resourcesDir;
 
   private final Supplier<ApplicationListener<PluginUploadedEvent>> pluginLoadedListener;
 
-  private final Supplier<ApplicationListener<LaunchFinishedNotificationEvent>> launchedFinishNotificationEventListenerSupplier;
+  private final Supplier<ApplicationListener<LaunchFinishedNotificationEvent>> launchFinishedNotificationEventListenerSupplier;
 
   private final Supplier<MessageTemplateStore> messageTemplateStoreSupplier;
 
@@ -111,8 +99,7 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
   @Autowired
   private ProjectRepository projectRepository;
 
-  // @Autowired // uncomment for future release
-  private final RestTemplate restTemplate = new RestTemplate();
+  private final RestClient restClient = RestClient.create();
 
   @Autowired
   private ApplicationContext applicationContext;
@@ -137,9 +124,9 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
     attachmentResolverSupplier = new MemoizingSupplier<>(() -> new AttachmentResolver(
         messageTemplateStoreSupplier.get(), new PropertyCollectorFactory()));
 
-    launchedFinishNotificationEventListenerSupplier = new MemoizingSupplier<>(
+    launchFinishedNotificationEventListenerSupplier = new MemoizingSupplier<>(
         () -> new TelegramLaunchFinishEventListener(projectRepository,
-            launchRepository, senderCaseMatcher.get(), attachmentResolverSupplier.get(), restTemplate));
+            launchRepository, senderCaseMatcher.get(), attachmentResolverSupplier.get(), restClient));
   }
 
   @PostConstruct
@@ -154,7 +141,8 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
         ApplicationEventMulticaster.class
     );
     applicationEventMulticaster.addApplicationListener(pluginLoadedListener.get());
-    applicationEventMulticaster.addApplicationListener(launchedFinishNotificationEventListenerSupplier.get());
+    applicationEventMulticaster.addApplicationListener(
+        launchFinishedNotificationEventListenerSupplier.get());
   }
 
   private void initScripts() throws IOException {
@@ -178,46 +166,30 @@ public class TelegramPluginExtension implements ReportPortalExtensionPoint, Disp
         ApplicationEventMulticaster.class
     );
     applicationEventMulticaster.removeApplicationListener(pluginLoadedListener.get());
-    applicationEventMulticaster.removeApplicationListener(launchedFinishNotificationEventListenerSupplier.get());
+    applicationEventMulticaster.removeApplicationListener(
+        launchFinishedNotificationEventListenerSupplier.get());
   }
 
   @Override
   public Map<String, ?> getPluginParams() {
     Map<String, Object> params = new HashMap<>();
     params.put(NAME_FIELD, PLUGIN_NAME);
-    params.put(ALLOWED_COMMANDS, new ArrayList<>(pluginCommandMapping.get().keySet()));
+    params.put(ALLOWED_COMMANDS, new ArrayList<>());
     params.put(DOCUMENTATION_LINK_FIELD, DOCUMENTATION_LINK);
-    params.put(COMMON_COMMANDS, new ArrayList<>(commonPluginCommandMapping.get().keySet()));
+    params.put(COMMON_COMMANDS, new ArrayList<>());
     return params;
   }
 
+  // TODO: remove once service-api drops the deprecated abstract methods in ReportPortalExtensionPoint
+  @Deprecated
   @Override
   public CommonPluginCommand getCommonCommand(String commandName) {
-    return commonPluginCommandMapping.get().get(commandName);
+    return null;
   }
 
+  @Deprecated
   @Override
   public PluginCommand getIntegrationCommand(String commandName) {
-    return pluginCommandMapping.get().get(commandName);
-  }
-
-  private Map<String, PluginCommand> getCommands() {
-    HashMap<String, PluginCommand> pluginCommands = new HashMap<>();
-    return pluginCommands;
-  }
-
-  private Map<String, CommonPluginCommand<?>> getCommonCommands() {
-    HashMap<String, CommonPluginCommand<?>> pluginCommands = new HashMap<>();
-    return pluginCommands;
-  }
-
-  protected ObjectMapper configureObjectMapper() {
-    ObjectMapper om = new ObjectMapper();
-    om.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
-    om.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
-    om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    om.registerModule(new JavaTimeModule());
-    om.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    return om;
+    return null;
   }
 }
