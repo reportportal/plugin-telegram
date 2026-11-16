@@ -9,7 +9,7 @@ public enum StatisticTemplateProperty implements TemplateProperty {
   STATISTIC_EXECUTION_FAILED("statistics$executions$failed"),
   STATISTIC_EXECUTION_SKIPPED("statistics$executions$skipped"),
   STATISTIC_DEFECTS_PRODUCT_BUG("statistics$defects$product_bug$total"),
-  STATISTIC_DEFECTS_SYSTEM_ISSUE ("statistics$defects$system_issue$total"),
+  STATISTIC_DEFECTS_SYSTEM_ISSUE("statistics$defects$system_issue$total"),
   STATISTIC_DEFECTS_AUTOMATION_BUG("statistics$defects$automation_bug$total"),
   STATISTIC_DEFECTS_NO_DEFECT("statistics$defects$no_defect$total"),
   STATISTIC_DEFECTS_TO_INVESTIGATE("statistics$defects$to_investigate$total"),

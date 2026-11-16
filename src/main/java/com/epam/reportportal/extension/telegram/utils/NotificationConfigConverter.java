@@ -16,8 +16,8 @@
 
 package com.epam.reportportal.extension.telegram.utils;
 
-import com.epam.ta.reportportal.entity.project.email.LaunchAttributeRule;
-import com.epam.ta.reportportal.ws.reporting.ItemAttributeResource;
+import com.epam.reportportal.base.infrastructure.persistence.entity.project.email.LaunchAttributeRule;
+import com.epam.reportportal.base.reporting.AttributeResource;
 import java.util.function.Function;
 
 /**
@@ -29,9 +29,9 @@ public final class NotificationConfigConverter {
     //static only
   }
 
-  public static final Function<LaunchAttributeRule, ItemAttributeResource>
+  public static final Function<LaunchAttributeRule, AttributeResource>
       TO_ATTRIBUTE_RULE_RESOURCE = model -> {
-    ItemAttributeResource attributeResource = new ItemAttributeResource();
+    AttributeResource attributeResource = new AttributeResource();
     attributeResource.setKey(model.getKey());
     attributeResource.setValue(model.getValue());
     return attributeResource;
