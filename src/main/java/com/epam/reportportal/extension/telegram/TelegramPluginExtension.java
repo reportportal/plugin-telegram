@@ -62,7 +62,7 @@ import org.springframework.web.client.RestClient;
 @Extension
 public class TelegramPluginExtension implements ReportPortalExtensionPoint, DisposableBean {
 
-  private static final String PLUGIN_ID = "telegram";
+  private static final String PLUGIN_ID = "plugin-notification-telegram";
   public static final String BINARY_DATA_PROPERTIES_FILE_ID = "binary-data.properties";
 
   private static final String DOCUMENTATION_LINK_FIELD = "documentationLink";
